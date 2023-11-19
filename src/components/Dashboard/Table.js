@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Table = ({ employees, handleEdit, handleDelete }) => {
-  employees.forEach((employee, i) => {
-    employee.id = i + 1;
+const Table = ({ books, handleEdit, handleDelete }) => {
+  books.forEach((book, i) => {
+    book.id = i + 1;
   });
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'RON',
     minimumFractionDigits: null,
   });
 
@@ -17,29 +17,27 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
         <thead>
           <tr>
             <th>No.</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Salary</th>
-            <th>Date</th>
+            <th>Book Title</th>
+            <th>Book Author</th>
+            <th>Book Price</th>
+            <th>Book Publishing House</th>
             <th colSpan={2} className="text-center">
               Actions
             </th>
           </tr>
         </thead>
         <tbody>
-          {employees.length > 0 ? (
-            employees.map((employee, i) => (
-              <tr key={employee.id}>
+          {books.length > 0 ? (
+            books.map((book, i) => (
+              <tr key={book.id}>
                 <td>{i + 1}</td>
-                <td>{employee.firstName}</td>
-                <td>{employee.lastName}</td>
-                <td>{employee.email}</td>
-                <td>{formatter.format(employee.salary)}</td>
-                <td>{employee.date} </td>
+                <td>{book.bookTitle}</td>
+                <td>{book.bookAuthor}</td>
+                <td>{formatter.format(book.bookPrice)}</td>
+                <td>{book.bookPublishingHouse}</td>
                 <td className="text-right">
                   <button
-                    onClick={() => handleEdit(employee.id)}
+                    onClick={() => handleEdit(book.id)}
                     className="button muted-button"
                   >
                     Edit
@@ -47,7 +45,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
                 </td>
                 <td className="text-left">
                   <button
-                    onClick={() => handleDelete(employee.id)}
+                    onClick={() => handleDelete(book.id)}
                     className="button muted-button"
                   >
                     Delete
@@ -57,7 +55,7 @@ const Table = ({ employees, handleEdit, handleDelete }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={7}>No Employees</td>
+              <td colSpan={7}>No books</td>
             </tr>
           )}
         </tbody>

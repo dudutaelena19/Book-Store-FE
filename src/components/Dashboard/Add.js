@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Add = ({ employees, setEmployees, setIsAdding }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [salary, setSalary] = useState('');
-  const [date, setDate] = useState('');
+const Add = ({ books, setBooks, setIsAdding }) => {
+  const [bookTitle, setBookTitle] = useState('');
+  const [bookAuthor, setBookAuthor] = useState('');
+  const [bookPrice, setBookPrice] = useState('');
+  const [bookPublishingHouse, setBookPublishingHouse] = useState('');
 
-  const handleAdd = e => {
+
+
+  const handleAdd = e=> {
     e.preventDefault();
+    setBookTitle('');
+    setBookAuthor('');
+    setBookPrice('');
+    setBookPublishingHouse('');
 
-    if (!firstName || !lastName || !email || !salary || !date) {
+    if (!bookTitle || !bookAuthor || !bookPrice || !bookPublishingHouse) {
       return Swal.fire({
         icon: 'error',
         title: 'Error!',
@@ -19,74 +24,76 @@ const Add = ({ employees, setEmployees, setIsAdding }) => {
         showConfirmButton: true,
       });
     }
-
-    const id = employees.length + 1;
-    const newEmployee = {
-      id,
-      firstName,
-      lastName,
-      email,
-      salary,
-      date,
-    };
-
-    employees.push(newEmployee);
-    localStorage.setItem('employees_data', JSON.stringify(employees));
-    setEmployees(employees);
+  
+      addToDatabase();
+    // // localStorage.setItem('books_data', JSON.stringify(books));
     setIsAdding(false);
 
     Swal.fire({
       icon: 'success',
       title: 'Added!',
-      text: `${firstName} ${lastName}'s data has been Added.`,
+      text: `${bookTitle}  data has been Added.`,
       showConfirmButton: false,
       timer: 1500,
     });
   };
 
+  const addToDatabase=async()=>{
+    const newBook = {
+      bookTitle,
+      bookAuthor,
+      bookPrice,
+      bookPublishingHouse
+    };
+
+
+    const result =await fetch('http://localhost:3000/api/books/save',{
+      method:"POST",
+      headers:{
+         'Content-Type':'application/json' 
+      },
+      body: JSON.stringify(newBook)
+    })
+    books.push(newBook);
+    const resultInJson= await result.json();
+    setBooks(prev=>[...prev,resultInJson]);
+  }
+
   return (
     <div className="small-container">
       <form onSubmit={handleAdd}>
-        <h1>Add Employee</h1>
-        <label htmlFor="firstName">First Name</label>
+        <h1>Add Book</h1>
+        <label htmlFor="bookTitle">Book Title</label>
         <input
-          id="firstName"
+          id="bookTitle"
           type="text"
-          name="firstName"
-          value={firstName}
-          onChange={e => setFirstName(e.target.value)}
+          name="bookTitle"
+          value={bookTitle}
+          onChange={e => setBookTitle(e.target.value)}
         />
-        <label htmlFor="lastName">Last Name</label>
+        <label htmlFor="bookAuthor">Book Author</label>
         <input
-          id="lastName"
+          id="bookAuthor"
           type="text"
-          name="lastName"
-          value={lastName}
-          onChange={e => setLastName(e.target.value)}
+          name="bookAuthor"
+          value={bookAuthor}
+          onChange={e => setBookAuthor(e.target.value)}
         />
-        <label htmlFor="email">Email</label>
+        <label htmlFor="bookPrice">Book Price</label>
         <input
-          id="email"
-          type="email"
-          name="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          id="bookPrice"
+          type="text"
+          name="bookPrice"
+          value={bookPrice}
+          onChange={e => setBookPrice(e.target.value)}
         />
-        <label htmlFor="salary">Salary ($)</label>
+        <label htmlFor="bookPublishingHouse">Publishing house</label>
         <input
-          id="salary"
-          type="number"
-          name="salary"
-          value={salary}
-          onChange={e => setSalary(e.target.value)}
-        />
-        <label htmlFor="date">Date</label>
-        <input
-          id="date"
-          type="date"
-          name="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
+          id="bookPublishingHouse"
+          type="text"
+          name="bookPublishingHouse"
+          value={bookPublishingHouse}
+          onChange={e => setBookPublishingHouse(e.target.value)}
         />
         <div style={{ marginTop: '30px' }}>
           <input type="submit" value="Add" />

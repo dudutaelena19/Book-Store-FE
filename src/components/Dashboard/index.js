@@ -6,23 +6,35 @@ import Table from './Table';
 import Add from './Add';
 import Edit from './Edit';
 
-import { employeesData } from '../../data';
+import { booksData } from '../../data';
 
 const Dashboard = ({ setIsAuthenticated }) => {
-  const [employees, setEmployees] = useState(employeesData);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [books, setBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('employees_data'));
-    if (data !== null && Object.keys(data).length !== 0) setEmployees(data);
-  }, []);
+  // useEffect(() => {
+  //   const data = JSON.parse(localStorage.getItem('books_data'));
+  //   if (data !== null && Object.keys(data).length !== 0) setBooks(data);
+  // }, []);
+
+  useEffect(()=>{
+    const fetchData=async ()=>{
+      const result=await fetch('http://localhost:3000/api/books/all');
+      const jsonResult=await result.json();
+
+      setBooks(jsonResult)
+    }
+
+    fetchData();
+  },[])
 
   const handleEdit = id => {
-    const [employee] = employees.filter(employee => employee.id === id);
+    const [book] = books
+    .filter(book => book.id === id);
 
-    setSelectedEmployee(employee);
+    setSelectedBook(book);
     setIsEditing(true);
   };
 
@@ -36,22 +48,33 @@ const Dashboard = ({ setIsAuthenticated }) => {
       cancelButtonText: 'No, cancel!',
     }).then(result => {
       if (result.value) {
-        const [employee] = employees.filter(employee => employee.id === id);
+        const [book] = books.filter(employee => employee.id === id);
 
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
-          text: `${employee.firstName} ${employee.lastName}'s data has been deleted.`,
+          text: `${book.bookTitle} data has been deleted.`,
           showConfirmButton: false,
           timer: 1500,
         });
 
-        const employeesCopy = employees.filter(employee => employee.id !== id);
-        localStorage.setItem('employees_data', JSON.stringify(employeesCopy));
-        setEmployees(employeesCopy);
+        const booksCopy = books.filter(book => book.id !== id);
+        // localStorage.setItem('books_data', JSON.stringify(booksCopy));
+        deleteFromDatabase(id);
+        setBooks(booksCopy);
       }
     });
   };
+
+  const deleteFromDatabase=((id)=>{
+    fetch("http://localhost:3000/api/books/"+id,{
+      method:"DELETE"
+    }).then(()=>{
+        window.location.reload();
+    }).catch((err)=>{
+      console.log(err);
+    })
+  })
 
   return (
     <div className="container">
@@ -62,7 +85,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
             setIsAuthenticated={setIsAuthenticated}
           />
           <Table
-            employees={employees}
+            books={books}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           />
@@ -70,16 +93,16 @@ const Dashboard = ({ setIsAuthenticated }) => {
       )}
       {isAdding && (
         <Add
-          employees={employees}
-          setEmployees={setEmployees}
+          books={books}
+          setBooks={setBooks}
           setIsAdding={setIsAdding}
         />
       )}
       {isEditing && (
         <Edit
-          employees={employees}
-          selectedEmployee={selectedEmployee}
-          setEmployees={setEmployees}
+          books={books}
+          selectedBook={selectedBook}
+          setBooks={setBooks}
           setIsEditing={setIsEditing}
         />
       )}

@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
-const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
-  const id = selectedEmployee.id;
+const Edit = ({ books, selectedBook, setBooks, setIsEditing }) => {
+  const id = selectedBook.id;
 
-  const [firstName, setFirstName] = useState(selectedEmployee.firstName);
-  const [lastName, setLastName] = useState(selectedEmployee.lastName);
-  const [email, setEmail] = useState(selectedEmployee.email);
-  const [salary, setSalary] = useState(selectedEmployee.salary);
-  const [date, setDate] = useState(selectedEmployee.date);
+  const [bookTitle, setBookTitle] = useState(selectedBook.bookTitle);
+  const [bookAuthor, setBookAuthor] = useState(selectedBook.bookAuthor);
+  const [bookPrice, setBookPrice] = useState(selectedBook.bookPrice);
+  const [bookPublishingHouse, setBookPublishingHouse] = useState(selectedBook.bookPublishingHouse);
 
   const handleUpdate = e => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !salary || !date) {
+    if (!bookTitle || !bookAuthor || !bookPrice || !bookPublishingHouse) {
       return Swal.fire({
         icon: 'error',
         title: 'Error!',
@@ -24,28 +23,27 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
 
     const employee = {
       id,
-      firstName,
-      lastName,
-      email,
-      salary,
-      date,
+      bookTitle,
+      bookAuthor,
+      bookPrice,
+      bookPublishingHouse
     };
 
-    for (let i = 0; i < employees.length; i++) {
-      if (employees[i].id === id) {
-        employees.splice(i, 1, employee);
+    for (let i = 0; i < books.length; i++) {
+      if (books[i].id === id) {
+        books.splice(i, 1, employee);
         break;
       }
     }
 
-    localStorage.setItem('employees_data', JSON.stringify(employees));
-    setEmployees(employees);
+    localStorage.setItem('books_data', JSON.stringify(books));
+    setBooks(books);
     setIsEditing(false);
 
     Swal.fire({
       icon: 'success',
       title: 'Updated!',
-      text: `${employee.firstName} ${employee.lastName}'s data has been updated.`,
+      text: `${books.bookTitle}  data has been updated.`,
       showConfirmButton: false,
       timer: 1500,
     });
@@ -54,46 +52,38 @@ const Edit = ({ employees, selectedEmployee, setEmployees, setIsEditing }) => {
   return (
     <div className="small-container">
       <form onSubmit={handleUpdate}>
-        <h1>Edit Employee</h1>
-        <label htmlFor="firstName">First Name</label>
+        <h1>Edit Book</h1>
+        <label htmlFor="bookTitle">Book Title</label>
         <input
-          id="firstName"
+          id="bookTitle"
           type="text"
-          name="firstName"
-          value={firstName}
-          onChange={e => setFirstName(e.target.value)}
+          name="bookTitle"
+          value={bookTitle}
+          onChange={e => setBookTitle(e.target.value)}
         />
-        <label htmlFor="lastName">Last Name</label>
+        <label htmlFor="bookAuthor">Book Author</label>
         <input
-          id="lastName"
+          id="bookAuthor"
           type="text"
-          name="lastName"
-          value={lastName}
-          onChange={e => setLastName(e.target.value)}
+          name="bookAuthor"
+          value={bookAuthor}
+          onChange={e => setBookAuthor(e.target.value)}
         />
-        <label htmlFor="email">Email</label>
+        <label htmlFor="bookPrice">Book Price</label>
         <input
-          id="email"
-          type="email"
-          name="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
-        <label htmlFor="salary">Salary ($)</label>
-        <input
-          id="salary"
+          id="bookPrice"
           type="number"
-          name="salary"
-          value={salary}
-          onChange={e => setSalary(e.target.value)}
+          name="bookPrice"
+          value={bookPrice}
+          onChange={e => setBookPrice(e.target.value)}
         />
-        <label htmlFor="date">Date</label>
+        <label htmlFor="bookPublishingHouse">Publishing house ($)</label>
         <input
-          id="date"
-          type="date"
-          name="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
+          id="bookPublishingHouse"
+          type="text"
+          name="bookPublishingHouse"
+          value={bookPublishingHouse}
+          onChange={e => setBookPublishingHouse(e.target.value)}
         />
         <div style={{ marginTop: '30px' }}>
           <input type="submit" value="Update" />
