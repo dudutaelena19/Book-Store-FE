@@ -2,10 +2,10 @@
   "name": "crud-app",
   "version": "3.3.0",
   "private": true,
-  "homepage": "https://safdarjamal.github.io/crud-app/",
+  "homepage": "https://github.com/dudutaelena19/Book-Store-FE",
   "author": {
-    "name": "Safdar Jamal",
-    "url": "https://safdarjamal.github.io"
+    "name": "dudutaelena19",
+    "url": "https://github.com/dudutaelena19/Book-Store-FE"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
